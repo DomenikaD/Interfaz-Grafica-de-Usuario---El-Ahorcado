@@ -5,18 +5,216 @@
  */
 package ec.edu.ups.vista;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Domenika Delgado
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
+    
+    
+    public ImageIcon imI[];
+    public JButton btt[];
+    public String palabra[];
+    public int alea;
+    public int error;
+    public String respuesta[];
+
+    public VentanaPrincipal()throws IOException {
+        initComponents();
+        
+        //Posicion de la ventana 
+        this.setLocationRelativeTo(null);
+        
+        
+        imI = new ImageIcon[6];
+        btt = new JButton[27];
+        palabra = new String[10];
+
+        //Imagenes del ahorcado
+        imI[0] = new ImageIcon("src/ec/edu/ups/imagen/1.png");       
+        imI[1] = new ImageIcon("src/ec/edu/ups/imagen/2.png");
+        imI[2] = new ImageIcon("src/ec/edu/ups/imagen/3.png");
+        imI[3] = new ImageIcon("src/ec/edu/ups/imagen/4.png");
+        imI[4] = new ImageIcon("src/ec/edu/ups/imagen/5.png");
+        imI[5] = new ImageIcon("src/ec/edu/ups/imagen/6.png");
+
+        //Botones de las letras
+        btt[1] = jButton2;
+        btt[2] = jButton3;
+        btt[3] = jButton4;
+        btt[4] = jButton5;
+        btt[5] = jButton6;
+        btt[6] = jButton7;
+        btt[7] = jButton8;
+        btt[8] = jButton9;
+        btt[9] = jButton10;
+        btt[10] = jButton11;
+        btt[11] = jButton12;
+        btt[12] = jButton13;
+        btt[13] = jButton14;
+        btt[14] = jButton15;
+        btt[15] = jButton16;
+        btt[16] = jButton17;
+        btt[17] = jButton18;
+        btt[18] = jButton19;
+        btt[19] = jButton20;
+        btt[20] = jButton21;
+        btt[21] = jButton22;
+        btt[22] = jButton23;
+        btt[23] = jButton24;
+        btt[24] = jButton25;
+        btt[25] = jButton26;
+        btt[26] = jButton27;
+
+        //Palabras (Diccionario)
+        palabra[0] = "elefante".toUpperCase();
+        palabra[1] = "tigre".toUpperCase();
+        palabra[2] = "futbol".toUpperCase();
+        palabra[3] = "volley".toUpperCase();
+        palabra[4] = "manzana".toUpperCase();
+        palabra[5] = "fresa".toUpperCase();
+        palabra[6] = "morado".toUpperCase();
+        palabra[7] = "verde".toUpperCase();
+        palabra[8] = "computacion".toUpperCase();
+        palabra[9] = "medicina".toUpperCase();
+       
+        
+      
+
+        //Se asigna un evento a cada letra para comprobar que exista en la palabra 
+        for (int i = 1; i < 27; i++) {
+            btt[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    checarLetra(e);
+                }
+            });
+        }
+        iniciar();
+    }
+
+    //Comenzar los parametros del juego o si se inicio un nuevo juego
+    public void iniciar() {
+        error = 0;
+        jButton1.setIcon(imI[0]);
+        jTextPane1.setText("");
+        //para activar las letras del tablero
+        for (int i = 1; i < 27; i++) {
+            btt[i].setEnabled(true);
+        }
+        //Para generar una palabra aleatoriamente 
+        alea = (int) 0 + (int) (Math.random() * ((palabra.length - 1) + 1));
+        
+        
+        
+        //Separar
+        String pal[] = palabra[alea].split(" ");
+        respuesta = new String[palabra[alea].length() + 1];
+        int j = 0;
+        
+        //Se pone los guiones que van debajo de las letras como una separacion (_)
+        for (String pal1 : pal) {
+            for (int i = 0; i < pal1.length(); i++) {
+                jTextPane1.setText(jTextPane1.getText() + "_ ");
+                respuesta[j++] = "_";
+            }
+            jTextPane1.setText(jTextPane1.getText() + "\n");
+            respuesta[j++] = " ";
+        }
+        
+        if(alea==0 || alea ==1){
+            jLabel3.setText("");
+            jLabel3.setText("Animales");
+        }else if(alea==2 || alea ==3){
+            jLabel3.setText("");
+            jLabel3.setText("Deportes");
+        }else if(alea==4 || alea ==5){
+            jLabel3.setText("");
+            jLabel3.setText("Frutas");
+        }else if(alea==6 || alea ==7){
+            jLabel3.setText("");
+            jLabel3.setText("Colores");
+        }else if(alea==8 || alea ==9){
+            jLabel3.setText("");
+            jLabel3.setText("Carreras");
+        }
+    }
+
+    //Presionar una letra, se busca si pertenece a la palabra sino lo marca como error 
+    public void checarLetra(ActionEvent e) {
+        JButton bt = (JButton) e.getSource();
+        char c[];
+        
+        //Busca la letra 
+        for (int i = 1; i < 27; i++) {
+            if (bt == btt[i]) {
+                
+                c = Character.toChars(64 + i);
+                //Busca si la letra valorVerd 
+                boolean valorVerd = false;
+                for (int j = 0; j < palabra[alea].length(); j++) {
+                    if (c[0] == palabra[alea].charAt(j)) {
+                        respuesta[j] = c[0] + "";
+                        valorVerd = true;
+                    }
+                }
+                //Si existe la letra se muestra en el JFrame
+                if (valorVerd) {
+                    jTextPane1.setText("");
+                    for (String re : respuesta) {
+                        if (" ".equals(re)) {
+                            jTextPane1.setText(jTextPane1.getText() + "\n");
+                        } else {
+                            jTextPane1.setText(jTextPane1.getText() + re + " ");
+                        }
+                    }
+                    //Comprobacion si la palabra esta completa
+                    boolean gano = true;
+                    for (String re : respuesta) {
+                        if (re.equals("_")) {
+                            gano = false;
+                            break;
+                        }
+                    }
+                    //Si esta correcta, se muestra mensaje
+                    if (gano) {
+                        JOptionPane.showMessageDialog(this, "***Advino la Palabra***");
+                        iniciar();
+                        return;
+                    }
+                    //Suma de Errores
+                } else {
+                    jButton1.setIcon(imI[++error]);
+                    //Si llega a los error permitidos(5), el juego comienza de nuevo
+                    if (error == 5) {
+                        JOptionPane.showMessageDialog(this, "Intente de Nuevo :(  \n" + palabra[alea]);
+                        iniciar();
+                        return;
+                    }
+                }
+                //valorVerd: Desactiva las letras ya seleccionadas 
+                bt.setEnabled(false);
+                break;
+            }
+        }
+
+    }
 
     /**
      * Creates new form VentanaPrincipal
      */
-    public VentanaPrincipal() {
-        initComponents();
-    }
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,6 +257,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -106,7 +305,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTextPane1.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
         jScrollPane1.setViewportView(jTextPane1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 80, 341, 75));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 100, 260, 60));
 
         jButton27.setBackground(new java.awt.Color(255, 255, 255));
         jButton27.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
@@ -225,19 +424,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel1.setText("El Ahorcado");
         jLabel1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(153, 255, 51)));
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 380, 40));
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 240, 380));
+
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 350, 360));
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 153, 153));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Pista:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 220, 60, 20));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 460, 60, 20));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 450, 170, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton28ActionPerformed
-        iniciar();        // TODO add your handling code here:
+        iniciar();
     }//GEN-LAST:event_jButton28ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -247,6 +453,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,7 +489,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VentanaPrincipal().setVisible(true);
+                try {
+                    new VentanaPrincipal().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -314,6 +529,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
